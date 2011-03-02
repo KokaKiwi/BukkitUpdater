@@ -1,4 +1,4 @@
-package org.kokakiwi.bukkitupdater.commands;
+package org.kokakiwi.bukkitupdater;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

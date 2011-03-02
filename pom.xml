@@ -58,24 +58,6 @@
 	  <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.4.3</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
-        <configuration>
-          <archive>
-            <manifestFile>src/main/resources/MANIFEST.MF</manifestFile>
-          </archive>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -90,6 +72,20 @@
   		<groupId>jdom</groupId>
   		<artifactId>jdom</artifactId>
   		<version>1.1</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.bukkit</groupId>
+  		<artifactId>groupmanager</artifactId>
+  		<version>0.99d</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.bukkit</groupId>
+  		<artifactId>permissions</artifactId>
+  		<version>2.5.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
