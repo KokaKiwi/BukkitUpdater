@@ -29,6 +29,8 @@ public class BukkitUpdater extends JavaPlugin {
 	}
 
 	public void onEnable() {
+		getCommand("updater").setExecutor(new UpdaterCommandHandler(this));
+		
 		logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " is enabled!");
 	}
 	
