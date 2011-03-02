@@ -1,0 +1,7 @@
+name: BukkitUpdater
+version: 0.1
+main: org.kokakiwi.bukkitupdater.BukkitUpdater
+commands:
+  updater:
+    description: All of the BukkitUpdater command
+    usage: /updater <check|update>

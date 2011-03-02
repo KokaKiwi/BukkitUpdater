@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updater>
+	<sites>
+		<site>
+			<name>Main Update Site</name>
+			<url>http://www.example.org</url>
+			<file-url>http://www.example.org/updater.xml</file-url>
+		</site>
+	</sites>
+</updater>
