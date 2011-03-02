@@ -11,6 +11,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kokakiwi.bukkitupdater.commands.*;
+import org.kokakiwi.bukkitupdater.utils.FileDownloader;
 
 /**
  * @author Koka El Kiwi
@@ -19,11 +20,12 @@ import org.kokakiwi.bukkitupdater.commands.*;
 public class BukkitUpdater extends JavaPlugin {
 
 	private final Logger logger = Logger.getLogger("Minecraft.BukkitUpdater");
-	private PermissionsChecker perms;
+	public PermissionsChecker perms;
 	private PluginManager pm;
 	private PluginDescriptionFile pdfFile;
 	private UpdaterConfiguration config;
 	private BUpdater updater;
+	public FileDownloader download = new FileDownloader(this);
 
 	public void onEnable() {
 		pm = this.getServer().getPluginManager();
@@ -31,6 +33,8 @@ public class BukkitUpdater extends JavaPlugin {
 		pdfFile = this.getDescription();
 		config = new UpdaterConfiguration(this);
 		updater = new BUpdater(this);
+		
+		updater.update();
 		
 		logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " is enabled!");
 	}
@@ -44,6 +48,11 @@ public class BukkitUpdater extends JavaPlugin {
 		return this.pm;
 	}
 	
+	public UpdaterConfiguration getConfig()
+	{
+		return this.config;
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		String cmdName = cmd.getName();
 		
@@ -54,7 +63,7 @@ public class BukkitUpdater extends JavaPlugin {
 			if(args.length == 0)
 			{
 				handler = new NullCommand();
-				return handler.execute(sender, cmd, commandLabel, args);
+				return handler.execute(sender, cmd, commandLabel, args, this);
 			}
 			
 			String subcommand = args[0];
@@ -66,7 +75,7 @@ public class BukkitUpdater extends JavaPlugin {
 			else
 				handler = new NullCommand();
 			
-			return handler.execute(sender, cmd, commandLabel, args);
+			return handler.execute(sender, cmd, commandLabel, args, this);
 		}
 		
 		return false;
