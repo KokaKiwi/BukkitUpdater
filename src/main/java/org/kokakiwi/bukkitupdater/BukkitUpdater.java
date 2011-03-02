@@ -3,6 +3,7 @@
  */
 package org.kokakiwi.bukkitupdater;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
@@ -31,7 +32,12 @@ public class BukkitUpdater extends JavaPlugin {
 		pm = this.getServer().getPluginManager();
 		perms = new PermissionsChecker(this);
 		pdfFile = this.getDescription();
-		config = new UpdaterConfiguration(this);
+		try {
+			config = new UpdaterConfiguration(this);
+		} catch (IOException e) {
+			logger.severe("BukkitUpdater : Error during config loading!");
+			pm.disablePlugin(this);
+		}
 		updater = new BUpdater(this);
 		
 		updater.update();

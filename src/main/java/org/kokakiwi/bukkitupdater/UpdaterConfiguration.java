@@ -18,54 +18,53 @@ public class UpdaterConfiguration {
 	private Configuration config;
 	private List<String> updateUrls;
 	
-	public UpdaterConfiguration(BukkitUpdater bukkitUpdater)
+	public UpdaterConfiguration(BukkitUpdater bukkitUpdater) throws IOException
 	{
-		//Load config file
 		this.plugin = bukkitUpdater;
+		
+		if(!plugin.getDataFolder().exists())
+			plugin.getDataFolder().mkdirs();
+		
+		if(!new File(plugin.getDataFolder(), "cache/").exists())
+			new File(plugin.getDataFolder(), "cache/").mkdirs();
+		
+		//Load config file
 		File confFile = new File(plugin.getDataFolder(), "config.yml");
 		
 		if(!confFile.exists())
 		{
-			if (!confFile.exists()) {
-				confFile.mkdirs();
-	            InputStream input =
-	                    BukkitUpdater.class.getResourceAsStream("/defaults/config.yml");
-	            if (input != null) {
-	                FileOutputStream output = null;
-
-	                try {
-	                    output = new FileOutputStream(confFile);
-	                    byte[] buf = new byte[8192];
-	                    int length = 0;
-	                    while ((length = input.read(buf)) > 0) {
-	                        output.write(buf, 0, length);
-	                    }
-
-	                    logger.info("BukkitUpdater: Default configuration file written.");
-	                } catch (IOException e) {
-	                    e.printStackTrace();
-	                } finally {
-	                    try {
-	                        if (input != null) {
-	                            input.close();
-	                        }
-	                    } catch (IOException e) {
-	                    }
-
-	                    try {
-	                        if (output != null) {
-	                            output.close();
-	                        }
-	                    } catch (IOException e) {
-	                    }
-	                }
-	            }
-	        }
-			
-			if(!new File(plugin.getDataFolder(), "cache/").exists())
-			{
-				new File(plugin.getDataFolder(), "cache/").mkdirs();
-			}
+			confFile.createNewFile();
+			InputStream input = BukkitUpdater.class.getResourceAsStream("/defaults/config.yml");
+		        if (input != null) {
+		            FileOutputStream output = null;
+		
+		            try {
+		                output = new FileOutputStream(confFile);
+		                byte[] buf = new byte[8192];
+		                int length = 0;
+		                while ((length = input.read(buf)) > 0) {
+		                    output.write(buf, 0, length);
+		                }
+		
+		                logger.info("BukkitUpdater : Default configuration file written.");
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            } finally {
+		                try {
+		                    if (input != null) {
+		                        input.close();
+		                    }
+		                } catch (IOException e) {
+		                }
+		
+		                try {
+		                    if (output != null) {
+		                        output.close();
+		                    }
+		                } catch (IOException e) {
+		                }
+		            }
+		        }
 		}
 		
 		config = new Configuration(confFile);
