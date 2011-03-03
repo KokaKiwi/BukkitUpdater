@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: Koka El Kiwi
+Build-Jdk: 1.6.0_24
+Class-Path: ../lib/jdom-1.1.jar Permissions.jar GroupManager.jar

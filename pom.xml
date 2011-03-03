@@ -42,6 +42,17 @@
         </pluginRepository>
       </pluginRepositories>
   <url>http://www.bukkit.org</url>
+  <developers>
+  	<developer>
+  		<id>KokaKiwi</id>
+  		<name>Koka El Kiwi</name>
+  		<email>admin@kokabsolu.com</email>
+  		<url>http://kokaelkiwi.tk</url>
+  		<organization>Kowy Group</organization>
+  		<roles>
+  		</roles>
+  	</developer>
+  </developers>
   <scm>
   	<url>https://KokaKiwi@github.com/KokaKiwi/BukkitUpdater.git</url>
   </scm>
@@ -58,20 +69,29 @@
 	  <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-jar-plugin</artifactId>
+      	<version>2.3.1</version>
+      	<configuration>
+          <archive>
+            <manifestFile>src/main/resources/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
     </plugins>
+    <pluginManagement>
+    	<plugins>
+    	</plugins>
+    </pluginManagement>
+    <extensions>
+    </extensions>
   </build>
   <dependencies>
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>bukkit</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>jdom</groupId>
-  		<artifactId>jdom</artifactId>
-  		<version>1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
@@ -89,5 +109,13 @@
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
+  	<dependency>
+  		<groupId>jdom</groupId>
+  		<artifactId>jdom</artifactId>
+  		<version>1.1</version>
+  		<type>jar</type>
+  	</dependency>
   </dependencies>
+  <modules>
+  </modules>
 </project>

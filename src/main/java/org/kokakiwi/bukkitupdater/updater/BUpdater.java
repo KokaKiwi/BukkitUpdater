@@ -30,6 +30,16 @@ public class BUpdater {
 		
 		if(!new File("bukkitUpdates/plugins/").exists())
 			new File("bukkitUpdates/").mkdirs();
+		
+		if(!new File("lib/").exists())
+			new File("lib/").mkdirs();
+		
+		if(!new File("lib/jdom-1.1.jar").exists())
+		{
+			logger.warning("BukkitUpdater : jDom library not found, downloading it...");
+			plugin.download.download("http://kokakiwi.github.com/jdom-1.1.jar", new File("lib/jdom-1.1.jar"));
+			logger.info("BukkitUpdater : jDom library v1.1 downloaded!");
+		}
 	}
 	
 	public void downloadLists()
