@@ -1,5 +1,6 @@
 package org.kokakiwi.bukkitupdater.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,6 +15,25 @@ public class UpdateCommand extends CommandModel {
 		this.commandLabel = commandLabel;
 		this.args = args;
 		
-		return false;
+		if(sender.isPlayer())
+		{
+			if(plugin.perms.has((Player) sender, "updater.update"))
+			{
+				if(plugin.updater.update())
+					sender.sendMessage(ChatColor.GRAY.getCode() + "Plugins updated! Check bukkitUpdates dir!");
+				else
+					sender.sendMessage(ChatColor.RED.getCode() + "Error during update");
+				return true;
+			}else {
+				sender.sendMessage(ChatColor.RED.getCode() + "You're not permitted to use this command!");
+				return false;
+			}
+		}else{
+			if(plugin.updater.update())
+				sender.sendMessage("BukkitUpdater : Plugins updated! Check bukkitUpdates dir!");
+			else
+				sender.sendMessage("BukkitUpdater : Error during update");
+			return true;
+		}
 	}
 }

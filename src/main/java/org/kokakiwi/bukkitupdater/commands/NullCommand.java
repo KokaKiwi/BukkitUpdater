@@ -9,7 +9,7 @@ public class NullCommand extends CommandModel {
 
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String commandLabel, String[] args, BukkitUpdater plugin) {
-		sender.sendMessage(ChatColor.YELLOW.getCode() + "/updater <check|update>");
+		sender.sendMessage(ChatColor.YELLOW.getCode() + "/updater <check|update|install|load|enable|disable>");
 		
 		return false;
 	}

@@ -3,6 +3,7 @@
  */
 package org.kokakiwi.bukkitupdater;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -25,11 +26,21 @@ public class BukkitUpdater extends JavaPlugin {
 	public PermissionsChecker perms;
 	private PluginManager pm;
 	private PluginDescriptionFile pdfFile;
-	private UpdaterConfiguration config;
-	private BUpdater updater;
+	public UpdaterConfiguration config;
+	public BUpdater updater;
 	public FileDownloader download = new FileDownloader(this);
 
 	public void onEnable() {
+		if(!new File("lib/").exists())
+			new File("lib/").mkdirs();
+		
+		if(!new File("lib/jdom-1.1.jar").exists())
+		{
+			logger.warning("BukkitUpdater : jDom library not found, downloading it...");
+			download.download("http://kokakiwi.github.com/jdom-1.1.jar", new File("lib/jdom-1.1.jar"));
+			logger.info("BukkitUpdater : jDom library v1.1 downloaded!");
+		}
+		
 		pm = this.getServer().getPluginManager();
 		perms = new PermissionsChecker(this);
 		pdfFile = this.getDescription();
@@ -79,6 +90,18 @@ public class BukkitUpdater extends JavaPlugin {
 				handler = new UpdateCommand();
 			else if(subcommand.equalsIgnoreCase("check"))
 				handler = new CheckCommand();
+			else if(subcommand.equalsIgnoreCase("install"))
+				handler = new InstallCommand();
+			else if(subcommand.equalsIgnoreCase("remove"))
+				handler = new RemoveCommand();
+			else if(subcommand.equalsIgnoreCase("purge"))
+				handler = new PurgeCommand();
+			else if(subcommand.equalsIgnoreCase("disable"))
+				handler = new DisableCommand();
+			else if(subcommand.equalsIgnoreCase("enable"))
+				handler = new EnableCommand();
+			else if(subcommand.equalsIgnoreCase("load"))
+				handler = new LoadCommand();
 			else
 				handler = new NullCommand();
 			
