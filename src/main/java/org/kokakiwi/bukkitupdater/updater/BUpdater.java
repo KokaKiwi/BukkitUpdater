@@ -75,7 +75,6 @@ public class BUpdater {
 	    	    if (m.find())
 	    	    {
 	    	        String int1=m.group(2);
-	    	        logger.info("Found : " + int1);
 	    	        return int1;
 	    	    }
 	    		break;
@@ -101,6 +100,9 @@ public class BUpdater {
 				while(i.hasNext())
 				{
 					Element plug = i.next();
+					
+					if(plug.getChildText("id") == null)
+						continue;
 					
 					BPlugin bplug = new BPlugin(plug.getChildText("id"), plug.getChildText("name"), plug.getChildText("version"),
 							plug.getChildText("author"), plug.getChildText("file-type"), plug.getChildText("file-url"));
@@ -222,6 +224,7 @@ public class BUpdater {
 					if(plugins.get(dep.getAttributeValue("id")) != null)
 					{
 						BPlugin depend = plugins.get(dep.getAttributeValue("id"));
+						logger.info("BukkitUpdater : " + plug.name + " require '" + depend.name + "' plugin, now installing it...");
 						if(plugin.getPluginManager().getPlugin(depend.name) == null)
 						{
 							String installDep = install(depend.id);
@@ -248,7 +251,6 @@ public class BUpdater {
 	private String getCurrentVersion() {
 		String[] versionSplitted = plugin.getServer().getVersion().split("-");
 		String currentVersion = versionSplitted[3];
-		//git-Bukkit-0.0.0-493-g8b5496e-b493jnks
 		return currentVersion;
 	}
 
@@ -259,6 +261,8 @@ public class BUpdater {
 			BPlugin plug = plugins.get(id);
 			if(plugin.getPluginManager().getPlugin(plug.name) == null)
 			{
+				logger.info("BukkitUpdater : Installing '" + plug.name + "' ...");
+				
 				if(plug.bukkitBuild != null)
 				{
 					if(!VersionComparator.compare(plug.bukkitBuild, getCurrentVersion()).equals("=="))
@@ -277,6 +281,7 @@ public class BUpdater {
 						if(plugins.get(dep.getAttributeValue("id")) != null)
 						{
 							BPlugin depend = plugins.get(dep.getAttributeValue("id"));
+							logger.info("BukkitUpdater : " + plug.name + " require '" + depend.name + "' plugin, now installing it...");
 							if(plugin.getPluginManager().getPlugin(depend.name) == null)
 							{
 								String installDep = install(depend.id);
@@ -288,7 +293,6 @@ public class BUpdater {
 					}
 				}
 				
-				logger.info("BukkitUpdater : Installing '" + plug.name + "' ...");
 				if(plug.fileType.equalsIgnoreCase("jar"))
 					plugin.download.download(plug.fileUrl, new File("plugins/" + plug.fileUrl.substring(plug.fileUrl.lastIndexOf("/") + 1)));
 				else if(plug.fileType.equalsIgnoreCase("archive"))
@@ -384,24 +388,18 @@ public class BUpdater {
 	
 	public String load(String arg)
 	{
-		if(plugins.get(arg) != null)
+		if(new File("plugins/", arg + ".jar").exists())
 		{
-			File jarFile = new File("plugins/", plugins.get(arg).fileUrl.substring(plugins.get(arg).fileUrl.lastIndexOf("/") + 1));
-			return "Plugin disabled.";
-		}else {
-			if(new File("plugins/", arg + ".jar").exists())
-			{
-				try {
-					plugin.getPluginManager().loadPlugin(new File("plugins/", arg + ".jar"));
-					return "Plugin loaded.";
-				} catch (Exception e) {
-					logger.severe("Error during loading plugin '" + arg + "' !");
-					e.printStackTrace();
-					return "Error during loading plugin.";
-				}
-			}else {
-				return "Plugin not found.";
+			try {
+				plugin.getPluginManager().loadPlugin(new File("plugins/", arg + ".jar"));
+				return "Plugin loaded.";
+			} catch (Exception e) {
+				logger.severe("Error during loading plugin '" + arg + "' !");
+				e.printStackTrace();
+				return "Error during loading plugin.";
 			}
+		}else {
+			return "Plugin not found.";
 		}
 	}
 }
