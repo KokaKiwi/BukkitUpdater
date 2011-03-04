@@ -193,9 +193,9 @@ public class BUpdater {
 			{
 				if(VersionComparator.compare(newVersion, currentVersion).equals(">"))
 				{
-					plugin.download.download(coreUrl, new File("bukkitUpdater/craftbukkit-0.0.1-SNAPSHOT.jar"));
+					plugin.download.download(coreUrl, new File("bukkitUpdates/craftbukkit-0.0.1-SNAPSHOT.jar"));
 					logger.info("BukkitUpdater : New CraftBukkit build available (#" + newVersion + "), this server using build #" + currentVersion + " !");
-					logger.info("				 You should update the server. New version downloaded in bukkitUpdater folder.");
+					logger.info("                You should update the server. New version downloaded in bukkitUpdater folder.");
 				}
 			}else
 				logger.warning("BukkitUpdater : Error during getting last Bukkit build number.");
@@ -234,7 +234,7 @@ public class BUpdater {
 						}
 					}else {
 						logger.warning("BukkitUpdater : Plugin require depency '" + dep.getAttributeValue("id") + "' but it isn't in repositories.");
-						logger.warning("				You should download it manually.");
+						logger.warning("                You should download it manually.");
 					}
 				}
 			}
