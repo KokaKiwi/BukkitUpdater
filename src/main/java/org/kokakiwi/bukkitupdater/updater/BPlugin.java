@@ -1,5 +1,7 @@
 package org.kokakiwi.bukkitupdater.updater;
 
+import java.util.List;
+
 import org.jdom.Element;
 
 public class BPlugin {
@@ -11,7 +13,9 @@ public class BPlugin {
 	public final String fileUrl;
 	
 	public String url = "";
-	public Element archive;
+	public Element archive = null;
+	public List dependencies = null;
+	public String bukkitBuild = null;
 	
 	public BPlugin(String id, String name, String version, String author, String fileType, String fileUrl)
 	{

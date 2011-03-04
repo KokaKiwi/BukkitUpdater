@@ -88,4 +88,8 @@ public class UpdaterConfiguration {
 	{
 		return this.updateUrls;
 	}
+
+	public Configuration getConfig() {
+		return config;
+	}
 }

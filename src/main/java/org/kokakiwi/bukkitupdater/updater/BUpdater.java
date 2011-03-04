@@ -1,7 +1,12 @@
 package org.kokakiwi.bukkitupdater.updater;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -27,6 +34,7 @@ public class BUpdater {
 	private final BukkitUpdater plugin;
 	private ArrayList<String> repositories;
 	private Map<String, BPlugin> plugins;
+	private Map<String, String> pluginsName;
 
 	public BUpdater(BukkitUpdater bukkitUpdater) {
 		this.plugin = bukkitUpdater;
@@ -48,9 +56,38 @@ public class BUpdater {
 		}
 	}
 	
+	public String getBuildNumber(String bukkitUrl) throws IOException {
+	    URL url = new URL(bukkitUrl);
+	    URLConnection urlConnection = url.openConnection();
+	    HttpURLConnection connection = null;
+	    connection = (HttpURLConnection) urlConnection;
+	    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	    String current;
+	    while ((current = in.readLine()) != null) {
+	    	if(current.contains("Build")) {
+	    	    String txt = current;
+	    	    String re1=".*?";
+	    	    String re2="(#)";
+	    	    String re3="(\\d+)";
+	    	    
+	    	    Pattern p = Pattern.compile(re1+re2+re3,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	    	    Matcher m = p.matcher(txt);
+	    	    if (m.find())
+	    	    {
+	    	        String int1=m.group(2);
+	    	        logger.info("Found : " + int1);
+	    	        return int1;
+	    	    }
+	    		break;
+	    	}
+	    }
+	    return null;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public boolean updateLists() {
 		plugins = new HashMap<String, BPlugin>();
+		pluginsName = new HashMap<String, String>();
 		
 		for(String repository : repositories)
 		{
@@ -64,15 +101,24 @@ public class BUpdater {
 				while(i.hasNext())
 				{
 					Element plug = i.next();
+					
 					BPlugin bplug = new BPlugin(plug.getChildText("id"), plug.getChildText("name"), plug.getChildText("version"),
 							plug.getChildText("author"), plug.getChildText("file-type"), plug.getChildText("file-url"));
+					
 					if(plug.getChildText("url") != null)
 						bplug.url = plug.getChildText("url");
+					
 					if(bplug.fileType.equalsIgnoreCase("archive"))
-					{
 						bplug.archive = plug.getChild("archive");
-					}
+					
+					if(plug.getChildText("dependencies") != null)
+						bplug.dependencies = plug.getChild("dependencies").getChildren("dep");
+					
+					if(plug.getChildText("bukkit-build") != null)
+						bplug.bukkitBuild = plug.getChildText("bukkit-build");
+					
 					plugins.put(plug.getChildText("id"), bplug);
+					pluginsName.put(bplug.name, bplug.id);
 				}
 				return true;
 			} catch (JDOMException e) {
@@ -95,18 +141,23 @@ public class BUpdater {
 		Plugin[] loadedPlugins = plugin.getPluginManager().getPlugins();
 		for(Plugin plug : loadedPlugins)
 		{
+			BPlugin bplug;
 			if(plugins.get(plug.getDescription().getName()) != null)
-			{
-				String currentVersion = plug.getDescription().getVersion();
-				String newVersion = plugins.get(plug.getDescription().getName()).version;
-				String compared = VersionComparator.compare(currentVersion, newVersion);
-				if(compared.equals("<"))
-				{
-					checker.add(plugins.get(plug.getDescription().getName()));
-					logger.info("BukkitUpdater : New version detected for '" + plug.getDescription().getName() + "' (new version: " + newVersion + ")");
-				}
-			}else{
+				bplug = plugins.get(plug.getDescription().getName());
+			else if(plugins.get(pluginsName.get(plug.getDescription().getName())) != null)
+				bplug = plugins.get(pluginsName.get(plug.getDescription().getName()));
+			else {
 				logger.info("BukkitUpdater : Plugin '" + plug.getDescription().getName() + "' isn't in loaded repositories");
+				continue;
+			}
+			
+			String currentVersion = plug.getDescription().getVersion();
+			String newVersion = bplug.version;
+			String compared = VersionComparator.compare(currentVersion, newVersion);
+			if(compared.equals("<"))
+			{
+				checker.add(bplug);
+				logger.info("BukkitUpdater : New version detected for '" + plug.getDescription().getName() + "' (new version: " + newVersion + ")");
 			}
 		}
 		return checker;
@@ -117,9 +168,71 @@ public class BUpdater {
 		logger.info("BukkitUpdater : Updating...");
 		downloadLists();
 		updateLists();
+		
+		//Update CraftBukkit
+		String coreVersion = plugin.config.getConfig().getString("bukkitCoreVersion");
+		String currentVersion = getCurrentVersion();
+		String url = null;
+		String coreUrl = null;
+		if(coreVersion.equalsIgnoreCase("recommended"))
+		{
+			url = "http://jenkins.lukegb.com/job/dev-CraftBukkit/Recommended/";
+			coreUrl = "http://jenkins.lukegb.com/job/dev-CraftBukkit/Recommended/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar";
+		}else if(coreVersion.equalsIgnoreCase("snapshot") || coreVersion.equalsIgnoreCase("stable") || coreVersion.equalsIgnoreCase("latest")) {
+			url = "http://jenkins.lukegb.com/job/dev-CraftBukkit/lastStableBuild/";
+			coreUrl = "http://jenkins.lukegb.com/job/dev-CraftBukkit/lastStableBuild/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar";
+		}
+		try {
+			String newVersion = getBuildNumber(url);
+			if(newVersion != null)
+			{
+				if(VersionComparator.compare(newVersion, currentVersion).equals(">"))
+				{
+					plugin.download.download(coreUrl, new File("bukkitUpdater/craftbukkit-0.0.1-SNAPSHOT.jar"));
+					logger.info("BukkitUpdater : New CraftBukkit build available (#" + newVersion + "), this server using build #" + currentVersion + " !");
+					logger.info("				 You should update the server. New version downloaded in bukkitUpdater folder.");
+				}
+			}else
+				logger.warning("BukkitUpdater : Error during getting last Bukkit build number.");
+		} catch (IOException e) {
+			logger.warning("BukkitUpdater : Error during getting last Bukkit build number.");
+			e.printStackTrace();
+		}
+		
+		
+		//Update plugins
 		ArrayList<BPlugin> newPlugins = check();
 		for(BPlugin plug : newPlugins)
 		{
+			if(plug.bukkitBuild != null)
+			{
+				if(VersionComparator.compare(plug.bukkitBuild, plugin.getServer().getVersion()).equals("<"))
+				{
+					logger.warning("BukkitUpdater : Plugin '" + plug.name + "' require CraftBukkit build " + plug.bukkitBuild + " and you have build " + plugin.getServer().getVersion());
+					logger.warning("                You should update your server core.");
+				}
+			}
+			
+			if(plug.dependencies != null)
+			{
+				Iterator i = plug.dependencies.iterator();
+				while(i.hasNext())
+				{
+					Element dep = (Element) i.next();
+					if(plugins.get(dep.getAttributeValue("id")) != null)
+					{
+						BPlugin depend = plugins.get(dep.getAttributeValue("id"));
+						if(plugin.getPluginManager().getPlugin(depend.name) == null)
+						{
+							String installDep = install(depend.id);
+						}
+					}else {
+						logger.warning("BukkitUpdater : Plugin require depency '" + dep.getAttributeValue("id") + "' but it isn't in repositories.");
+						logger.warning("				You should download it manually.");
+					}
+				}
+			}
+			
 			if(plug.fileType.equalsIgnoreCase("jar"))
 				plugin.download.download(plug.fileUrl, new File("bukkitUpdates/plugins/" + plug.fileUrl.substring(plug.fileUrl.lastIndexOf("/") + 1)));
 			else if(plug.fileType.equalsIgnoreCase("archive"))
@@ -132,6 +245,13 @@ public class BUpdater {
 		return true;
 	}
 	
+	private String getCurrentVersion() {
+		String[] versionSplitted = plugin.getServer().getVersion().split("-");
+		String currentVersion = versionSplitted[3];
+		//git-Bukkit-0.0.0-493-g8b5496e-b493jnks
+		return currentVersion;
+	}
+
 	public String install(String id)
 	{
 		if(plugins.get(id) != null)
@@ -139,6 +259,36 @@ public class BUpdater {
 			BPlugin plug = plugins.get(id);
 			if(plugin.getPluginManager().getPlugin(plug.name) == null)
 			{
+				if(plug.bukkitBuild != null)
+				{
+					if(!VersionComparator.compare(plug.bukkitBuild, getCurrentVersion()).equals("=="))
+					{
+						logger.warning("BukkitUpdater : Plugin '" + plug.name + "' require CraftBukkit build " + plug.bukkitBuild + " and you have build " + plugin.getServer().getVersion());
+						logger.warning("                You should update your server core.");
+					}
+				}
+				
+				if(plug.dependencies != null)
+				{
+					Iterator i = plug.dependencies.iterator();
+					while(i.hasNext())
+					{
+						Element dep = (Element) i.next();
+						if(plugins.get(dep.getAttributeValue("id")) != null)
+						{
+							BPlugin depend = plugins.get(dep.getAttributeValue("id"));
+							if(plugin.getPluginManager().getPlugin(depend.name) == null)
+							{
+								String installDep = install(depend.id);
+							}
+						}else {
+							logger.warning("BukkitUpdater : Plugin require depency '" + dep.getAttributeValue("id") + "' but it isn't in repositories.");
+							logger.warning("				You should download it manually.");
+						}
+					}
+				}
+				
+				logger.info("BukkitUpdater : Installing '" + plug.name + "' ...");
 				if(plug.fileType.equalsIgnoreCase("jar"))
 					plugin.download.download(plug.fileUrl, new File("plugins/" + plug.fileUrl.substring(plug.fileUrl.lastIndexOf("/") + 1)));
 				else if(plug.fileType.equalsIgnoreCase("archive"))
@@ -146,6 +296,8 @@ public class BUpdater {
 					plugin.download.download(plug.fileUrl, new File("bukkitUpdates/archives/" + plug.fileUrl.substring(plug.fileUrl.lastIndexOf("/") + 1)));
 					UnZip.unzip(new File("bukkitUpdates/archives/" + plug.fileUrl.substring(plug.fileUrl.lastIndexOf("/") + 1)), new File("plugins/"));
 				}
+				
+				String loadPlugin = load(id);
 				return "Plugin installed!";
 			}else{
 				return "Plugin already installed!";

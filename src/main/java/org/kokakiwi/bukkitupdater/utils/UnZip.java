@@ -14,7 +14,8 @@ public class UnZip {
 			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
 			ZipEntry entry;
 			while((entry = zis.getNextEntry()) != null) {
-				System.out.println("Extracting: " +entry);
+				new File(new File(zipDest, entry.getName()).getParent()).mkdirs();
+				new File(zipDest, entry.getName()).createNewFile();
 				int count;
 				byte data[] = new byte[BUFFER];
 				// write the files to the disk

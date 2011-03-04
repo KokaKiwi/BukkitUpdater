@@ -1,2 +1,4 @@
 updateUrls:
-  - 'http://kokakiwi.github.com/updateList.xml'
+  - 'http://kokakiwi.github.com/BukkitUpdater/updateList.xml'
+  - 'http://www.kokabsolu.com/updateList.xml'
+bukkitCoreVersion: 'recommended'
