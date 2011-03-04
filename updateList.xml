@@ -9,10 +9,10 @@
 			<url>http://github.com/KokaKiwi/BukkitUpdater</url>
 			<file-type>archive</file-type>
 			<file-url>http://kokakiwi.github.com/test.zip</file-url>
-			<!-- <archive>
-				<file name="test.jar" dest="plugins/" />
-				<folder name="Test" dest="plugins/" />
-			</archive> -->
+			<dependencies>
+				<dep id="kiwiplugin" version="1.1" />
+			</dependencies>
+			<bukkit-build>440</bukkit-build>
 		</plugin>
 	</plugins>
 </repository>
