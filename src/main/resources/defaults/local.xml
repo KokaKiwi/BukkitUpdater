@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository>
+	<plugins>
+		<plugin> <!-- Example plugin, didn't exist ! -->
+			<id>bukkitupdater</id>  <!-- Plugin ID, must be in lower case - REQUIRED -->
+			<name>BukkitUpdater</name> <!-- Plugin name, must be the same name that plugin's description show - REQUIRED -->
+			<version>0.1</version> <!-- Version, must be in format "NUMBER.NUMBER.etc..." NO LETTERS! - REQUIRED -->
+			<author>KokaKiwi</author> <!-- Author, not used but - REQUIRED -->
+			<url>http://github.com/KokaKiwi/BukkitUpdater</url> <!-- Plugin website URL - OPTIONAL -->
+			<file-type>archive</file-type> <!-- File type (jar for .jar, archive for .zip) Tar.Gz not implemented - REQUIRED -->
+			<file-url>http://kokakiwi.github.com/test.zip</file-url> <!-- Plugin file URL - WARNING : Don't use https:// in file URL, BukkitUpdater couldn't check them for the moment - REQUIRED -->
+			<dependencies> <!-- Plugin dependencies - OPTIONAL -->
+				<dep id="kiwiplugin" version="1.1" /> <!-- Plugin dependency, "id" is dependency's ID, version not used - OPTIONAL -->
+			</dependencies>
+			<bukkit-build>440</bukkit-build> <!-- CraftBukkit Core Build dependency - OPTIONAL -->
+		</plugin>
+	</plugins>
+</repository>

@@ -2,7 +2,9 @@ package org.kokakiwi.bukkitupdater.updater;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -51,9 +54,11 @@ public class BUpdater {
 		repositories = new ArrayList<String>();
 		for(String url : plugin.getConfig().getUpdateUrls())
 		{
-			plugin.download.download(url, new File(plugin.getDataFolder(), "cache/" + url.substring(url.lastIndexOf("/") + 1)));
-			repositories.add(url.substring(url.lastIndexOf("/") + 1));
+			String xmlFile = System.currentTimeMillis() + "." + new Integer((int) (Math.random() * 100000)) + "." + url.substring(url.lastIndexOf("/") + 1);
+			plugin.download.download(url, new File(plugin.getDataFolder(), "cache/" + xmlFile));
+			repositories.add(xmlFile);
 		}
+		repositories.add("local.xml");
 	}
 	
 	public String getBuildNumber(String bukkitUrl) throws IOException {
@@ -84,7 +89,7 @@ public class BUpdater {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean updateLists() {
+	public void updateLists() {
 		plugins = new HashMap<String, BPlugin>();
 		pluginsName = new HashMap<String, String>();
 		
@@ -122,18 +127,16 @@ public class BUpdater {
 					plugins.put(plug.getChildText("id"), bplug);
 					pluginsName.put(bplug.name, bplug.id);
 				}
-				return true;
 			} catch (JDOMException e) {
 				logger.warning("BukkitUpdater : Error during parsing repository '" + repository + "'");
 				e.printStackTrace();
-				return false;
 			} catch (IOException e) {
 				logger.warning("BukkitUpdater : Error during parsing repository '" + repository + "'");
 				e.printStackTrace();
-				return false;
 			}
+			
+			new File(plugin.getDataFolder(), "cache/" + repository).delete(); //TODO Will be removed in the future with Cache system
 		}
-		return false;
 	}
 	
 	public ArrayList<BPlugin> check()

@@ -67,6 +67,45 @@ public class UpdaterConfiguration {
 		        }
 		}
 		
+		//Create local repository if doesn't exists
+		File localRepository = new File(plugin.getDataFolder(), "cache/local.xml");
+		
+		if(!localRepository.exists())
+		{
+			localRepository.createNewFile();
+			InputStream input = BukkitUpdater.class.getResourceAsStream("/defaults/local.xml");
+		        if (input != null) {
+		            FileOutputStream output = null;
+		
+		            try {
+		                output = new FileOutputStream(localRepository);
+		                byte[] buf = new byte[8192];
+		                int length = 0;
+		                while ((length = input.read(buf)) > 0) {
+		                    output.write(buf, 0, length);
+		                }
+		
+		                logger.info("BukkitUpdater : Local repository created.");
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            } finally {
+		                try {
+		                    if (input != null) {
+		                        input.close();
+		                    }
+		                } catch (IOException e) {
+		                }
+		
+		                try {
+		                    if (output != null) {
+		                        output.close();
+		                    }
+		                } catch (IOException e) {
+		                }
+		            }
+		        }
+		}
+		
 		config = new Configuration(confFile);
 		config.load();
 		
