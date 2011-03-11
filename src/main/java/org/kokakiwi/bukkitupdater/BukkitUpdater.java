@@ -3,9 +3,13 @@
  */
 package org.kokakiwi.bukkitupdater;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import javax.swing.Timer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,7 +33,14 @@ public class BukkitUpdater extends JavaPlugin {
 	public UpdaterConfiguration config;
 	public BUpdater updater;
 	public FileDownloader download = new FileDownloader(this);
+	private Timer upTimer;
+	private ActionListener upAction = new ActionListener() {
 
+		public void actionPerformed(ActionEvent arg0) {
+			updater.update();
+		}
+	};
+	
 	public void onEnable() {
 		if(!new File("lib/").exists())
 			new File("lib/").mkdirs();
@@ -46,6 +57,7 @@ public class BukkitUpdater extends JavaPlugin {
 		pdfFile = this.getDescription();
 		try {
 			config = new UpdaterConfiguration(this);
+			upTimer = new Timer(config.getUpdateTimer(), upAction);
 		} catch (IOException e) {
 			logger.severe("BukkitUpdater : Error during config loading!");
 			pm.disablePlugin(this);

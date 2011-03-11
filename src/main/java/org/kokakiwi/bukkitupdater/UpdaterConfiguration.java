@@ -17,6 +17,7 @@ public class UpdaterConfiguration {
 	
 	private Configuration config;
 	private List<String> updateUrls;
+	private int updateTimer;
 	
 	public UpdaterConfiguration(BukkitUpdater bukkitUpdater) throws IOException
 	{
@@ -110,6 +111,7 @@ public class UpdaterConfiguration {
 		config.load();
 		
 		updateUrls = config.getStringList("updateUrls", null);
+		updateTimer = config.getInt("updateTimer", 43200000);
 	}
 	
 	public boolean set(String node, Object value)
@@ -130,5 +132,9 @@ public class UpdaterConfiguration {
 
 	public Configuration getConfig() {
 		return config;
+	}
+
+	public int getUpdateTimer() {
+		return updateTimer;
 	}
 }

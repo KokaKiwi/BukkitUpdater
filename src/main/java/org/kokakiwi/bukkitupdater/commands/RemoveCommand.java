@@ -20,9 +20,9 @@ public class RemoveCommand extends CommandModel {
 		
 		if(sender.isPlayer())
 		{
-			if(plugin.perms.has((Player) sender, "updater.install"))
+			if(plugin.perms.has((Player) sender, "updater.remove"))
 			{
-				String message = plugin.updater.install(args[1]);
+				String message = plugin.updater.remove(args[1]);
 				sender.sendMessage(ChatColor.GRAY.getCode() + message);
 				return true;
 			}else {
@@ -30,7 +30,7 @@ public class RemoveCommand extends CommandModel {
 				return false;
 			}
 		}else{
-			String message = plugin.updater.install(args[1]);
+			String message = plugin.updater.remove(args[1]);
 			sender.sendMessage(message);
 			return true;
 		}

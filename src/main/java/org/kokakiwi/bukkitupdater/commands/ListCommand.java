@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.kokakiwi.bukkitupdater.BukkitUpdater;
 
-public class PurgeCommand extends CommandModel {
+public class ListCommand extends CommandModel {
 
 	@Override
 	public boolean execute(CommandSender sender, Command cmd, String commandLabel, String[] args, BukkitUpdater plugin) {
@@ -20,9 +20,9 @@ public class PurgeCommand extends CommandModel {
 		
 		if(sender.isPlayer())
 		{
-			if(plugin.perms.has((Player) sender, "updater.purge"))
+			if(plugin.perms.has((Player) sender, "updater.list"))
 			{
-				String message = plugin.updater.purge(args[1]);
+				String message = plugin.updater.list(args[1]);
 				sender.sendMessage(ChatColor.GRAY.getCode() + message);
 				return true;
 			}else {
@@ -30,7 +30,7 @@ public class PurgeCommand extends CommandModel {
 				return false;
 			}
 		}else{
-			String message = plugin.updater.purge(args[1]);
+			String message = plugin.updater.list(args[1]);
 			sender.sendMessage(message);
 			return true;
 		}

@@ -405,4 +405,20 @@ public class BUpdater {
 			return "Plugin not found.";
 		}
 	}
+
+	public String list(String type) {
+		if(type.equalsIgnoreCase("installed"))
+		{
+			String installed = "";
+			for(Plugin p : plugin.getPluginManager().getPlugins())
+			{
+				installed += p.getDescription().getName() + " (v" + p.getDescription().getVersion() + "), ";
+			}
+			return installed;
+		}else if(type.equalsIgnoreCase("available"))
+		{
+			return "Not implemented yet.";
+		}
+		return type;
+	}
 }
