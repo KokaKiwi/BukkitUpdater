@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.kokakiwi</groupId>
   <artifactId>bukkitupdater</artifactId>
-  <version>0.1.1</version>
+  <version>0.2</version>
   <name>BukkitUpdater</name>
   <description>Bukkit core and plugins updater</description>
   <repositories>

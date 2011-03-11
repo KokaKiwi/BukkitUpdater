@@ -1,4 +1,6 @@
 updateUrls:
   - 'http://kokakiwi.github.com/BukkitUpdater/updateList.xml'
+  - 'http://bukkitupdater.tk/updateList.xml'
   - 'http://www.kokabsolu.com/updateList.xml'
 bukkitCoreVersion: 'recommended'
+updateTimer: 43200000
