@@ -45,7 +45,7 @@ public class PermissionsChecker {
 		if(handler == PermissionHandler.GROUP_MANAGER)
 		{
 			GroupManager groupManager = (GroupManager) permissionPlugin;
-			return groupManager.getHandler().has(player, permission);
+			return groupManager.getPermissionHandler().has(player, permission);
 		}else if(handler == PermissionHandler.PERMISSIONS) {
 			Permissions permissions = (Permissions) permissionPlugin;
 			return permissions.getHandler().has(player, permission);
