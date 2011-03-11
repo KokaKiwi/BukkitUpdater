@@ -114,6 +114,8 @@ public class BukkitUpdater extends JavaPlugin {
 				handler = new EnableCommand();
 			else if(subcommand.equalsIgnoreCase("load"))
 				handler = new LoadCommand();
+			else if(subcommand.equalsIgnoreCase("list"))
+				handler = new ListCommand();
 			else
 				handler = new NullCommand();
 			
