@@ -18,7 +18,7 @@ public class CheckCommand extends CommandModel {
 		this.commandLabel = commandLabel;
 		this.args = args;
 		
-		if(sender.isPlayer())
+		if(sender instanceof Player)
 		{
 			if(plugin.perms.has((Player) sender, "updater.check"))
 			{

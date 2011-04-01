@@ -253,7 +253,7 @@ public class BUpdater {
 	
 	private String getCurrentVersion() {
 		String[] versionSplitted = plugin.getServer().getVersion().split("-");
-		String currentVersion = versionSplitted[3];
+		String currentVersion = versionSplitted[5].substring(1, 4);
 		return currentVersion;
 	}
 

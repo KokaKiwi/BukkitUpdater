@@ -18,7 +18,7 @@ public class ListCommand extends CommandModel {
 		if(args.length != 2)
 			return false;
 		
-		if(sender.isPlayer())
+		if(sender instanceof Player)
 		{
 			if(plugin.perms.has((Player) sender, "updater.list"))
 			{
