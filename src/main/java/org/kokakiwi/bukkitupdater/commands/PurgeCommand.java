@@ -23,10 +23,10 @@ public class PurgeCommand extends CommandModel {
 			if(plugin.perms.has((Player) sender, "updater.purge"))
 			{
 				String message = plugin.updater.purge(args[1]);
-				sender.sendMessage(ChatColor.GRAY.getCode() + message);
+				sender.sendMessage(ChatColor.GRAY.toString() + message);
 				return true;
 			}else {
-				sender.sendMessage(ChatColor.RED.getCode() + "You're not permitted to use this command!");
+				sender.sendMessage(ChatColor.RED.toString() + "You're not permitted to use this command!");
 				return false;
 			}
 		}else{

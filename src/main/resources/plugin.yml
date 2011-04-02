@@ -1,3 +1,6 @@
 name: BukkitUpdater
-version: 0.2.1
+version: 0.2.2
 main: org.kokakiwi.bukkitupdater.BukkitUpdater
+commands:
+  updater:
+    description: BukkitUpdater Main command

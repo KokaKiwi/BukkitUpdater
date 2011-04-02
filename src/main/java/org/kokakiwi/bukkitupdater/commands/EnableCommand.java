@@ -23,10 +23,10 @@ public class EnableCommand extends CommandModel {
 			if(plugin.perms.has((Player) sender, "updater.enable"))
 			{
 				String message = plugin.updater.enable(args[1]);
-				sender.sendMessage(ChatColor.GRAY.getCode() + message);
+				sender.sendMessage(ChatColor.GRAY.toString() + message);
 				return true;
 			}else {
-				sender.sendMessage(ChatColor.RED.getCode() + "You're not permitted to use this command!");
+				sender.sendMessage(ChatColor.RED.toString() + "You're not permitted to use this command!");
 				return false;
 			}
 		}else{

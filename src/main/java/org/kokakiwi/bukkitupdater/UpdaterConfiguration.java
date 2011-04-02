@@ -80,7 +80,8 @@ public class UpdaterConfiguration {
 		
 		            try {
 		                output = new FileOutputStream(localRepository);
-		                byte[] buf = new byte[8192];
+		                //byte[] buf = new byte[8192];
+		                byte[] buf = new byte[32768];
 		                int length = 0;
 		                while ((length = input.read(buf)) > 0) {
 		                    output.write(buf, 0, length);

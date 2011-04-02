@@ -135,7 +135,8 @@ public class BUpdater {
 				e.printStackTrace();
 			}
 			
-			new File(plugin.getDataFolder(), "cache/" + repository).delete(); //TODO Will be removed in the future with Cache system
+			if(!repository.equalsIgnoreCase("local.xml"))
+				new File(plugin.getDataFolder(), "cache/" + repository).delete(); //TODO Will be removed in the future with Cache system
 		}
 	}
 	

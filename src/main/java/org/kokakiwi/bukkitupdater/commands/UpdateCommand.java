@@ -20,12 +20,12 @@ public class UpdateCommand extends CommandModel {
 			if(plugin.perms.has((Player) sender, "updater.update"))
 			{
 				if(plugin.updater.update())
-					sender.sendMessage(ChatColor.GRAY.getCode() + "Plugins updated! Check bukkitUpdates dir!");
+					sender.sendMessage(ChatColor.GRAY.toString() + "Plugins updated! Check bukkitUpdates dir!");
 				else
-					sender.sendMessage(ChatColor.RED.getCode() + "Error during update");
+					sender.sendMessage(ChatColor.RED.toString() + "Error during update");
 				return true;
 			}else {
-				sender.sendMessage(ChatColor.RED.getCode() + "You're not permitted to use this command!");
+				sender.sendMessage(ChatColor.RED.toString() + "You're not permitted to use this command!");
 				return false;
 			}
 		}else{

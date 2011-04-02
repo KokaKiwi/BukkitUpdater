@@ -30,13 +30,13 @@ public class CheckCommand extends CommandModel {
 					{
 						pluginsOutdated += plug.name + ", ";
 					}
-					sender.sendMessage(ChatColor.GRAY.getCode() + "Those plugins can be updated: " + pluginsOutdated);
+					sender.sendMessage(ChatColor.GRAY.toString() + "Those plugins can be updated: " + pluginsOutdated);
 				}else {
-					sender.sendMessage(ChatColor.GRAY.getCode() + "There's no updates available.");
+					sender.sendMessage(ChatColor.GRAY.toString() + "There's no updates available.");
 				}
 				return true;
 			}else {
-				sender.sendMessage(ChatColor.RED.getCode() + "You're not permitted to use this command!");
+				sender.sendMessage(ChatColor.RED.toString() + "You're not permitted to use this command!");
 				return false;
 			}
 		}else{
