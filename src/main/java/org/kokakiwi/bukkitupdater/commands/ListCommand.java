@@ -15,8 +15,11 @@ public class ListCommand extends CommandModel {
 		this.commandLabel = commandLabel;
 		this.args = args;
 		
-		if(args.length != 2)
-			return false;
+		if(args.length != 2) {
+                    sender.sendMessage("Bad syntax for list command. Use /updater list <available/installed>");
+                    return false;
+                }
+			
 		
 		if(sender instanceof Player)
 		{

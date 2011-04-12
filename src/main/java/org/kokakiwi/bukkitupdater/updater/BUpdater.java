@@ -12,9 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.bukkit.ChatColor;
 
 import org.bukkit.plugin.Plugin;
 import org.jdom.Document;
@@ -414,10 +416,28 @@ public class BUpdater {
 			{
 				installed += p.getDescription().getName() + " (v" + p.getDescription().getVersion() + "), ";
 			}
+                        if (installed.length()!=0) installed = installed.substring(0, installed.length()-2);
+
 			return installed;
 		}else if(type.equalsIgnoreCase("available"))
 		{
-			return "Not implemented yet.";
+
+
+                    if (plugins==null || plugins.isEmpty()) {
+                        return "The repository contains no plugins.";
+                    } else {
+                        TreeMap<String, BPlugin> sorted = new TreeMap<String, BPlugin>(plugins);
+                        String available = "";
+                        for (String id : sorted.keySet()) {
+                            BPlugin bp = sorted.get(id);
+                            if (!bp.name.isEmpty())
+                                available += ChatColor.WHITE + "- " + bp.id + ": " + ChatColor.GREEN + bp.name + " (v" + bp.version + ")"  + ChatColor.WHITE + (!bp.author.equals("?") && !bp.author.equals("unknown")?" by " + bp.author:"") + "\n";
+                        }
+
+                        //available = available.substring(0, available.length()-2);
+
+                        return available;
+                    }
 		}
 		return type;
 	}
