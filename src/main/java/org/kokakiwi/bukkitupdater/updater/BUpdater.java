@@ -2,9 +2,7 @@ package org.kokakiwi.bukkitupdater.updater;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,14 +12,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -132,7 +126,7 @@ public class BUpdater {
 				e.printStackTrace();
 			} catch (IOException e) {
 				logger.warning("BukkitUpdater : Error during parsing repository '" + repository + "'");
-				e.printStackTrace();
+				logger.warning(e.toString());
 			}
 			
 			if(!repository.equalsIgnoreCase("local.xml"))
@@ -171,7 +165,7 @@ public class BUpdater {
 	
 	public boolean update()
 	{
-		logger.info("BukkitUpdater : Updating...");
+		logger.info("BukkitUpdater : Checking for updates...");
 		downloadLists();
 		updateLists();
 		
@@ -182,11 +176,11 @@ public class BUpdater {
 		String coreUrl = null;
 		if(coreVersion.equalsIgnoreCase("recommended"))
 		{
-			url = "http://jenkins.lukegb.com/job/dev-CraftBukkit/Recommended/";
-			coreUrl = "http://jenkins.lukegb.com/job/dev-CraftBukkit/Recommended/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar";
+			url = "http://ci.bukkit.org/job/dev-CraftBukkit/Recommended/";
+			coreUrl = "http://ci.bukkit.org/job/dev-CraftBukkit/Recommended/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar";
 		}else if(coreVersion.equalsIgnoreCase("snapshot") || coreVersion.equalsIgnoreCase("stable") || coreVersion.equalsIgnoreCase("latest")) {
-			url = "http://jenkins.lukegb.com/job/dev-CraftBukkit/lastStableBuild/";
-			coreUrl = "http://jenkins.lukegb.com/job/dev-CraftBukkit/lastStableBuild/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar";
+			url = "http://ci.bukkit.org/job/dev-CraftBukkit/lastStableBuild/";
+			coreUrl = "http://ci.bukkit.org/job/dev-CraftBukkit/lastStableBuild/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar";
 		}
 		try {
 			String newVersion = getBuildNumber(url);
@@ -202,7 +196,7 @@ public class BUpdater {
 				logger.warning("BukkitUpdater : Error during getting last Bukkit build number.");
 		} catch (IOException e) {
 			logger.warning("BukkitUpdater : Error during getting last Bukkit build number.");
-			e.printStackTrace();
+                        logger.warning(e.toString());
 		}
 		
 		
@@ -249,6 +243,7 @@ public class BUpdater {
 			}
 		}
 		
+                logger.info("BukkitUpdater : Done checking for updates.");
 		return true;
 	}
 	

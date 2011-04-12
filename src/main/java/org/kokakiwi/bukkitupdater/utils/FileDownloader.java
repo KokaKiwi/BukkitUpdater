@@ -41,10 +41,10 @@ public class FileDownloader {
 			return true;
 		} catch (MalformedURLException e) {
 			logger.warning("BukkitUpdater : Error during downloading '" + remoteUrl + "'");
-			e.printStackTrace();
+			logger.warning(e.toString());
 		} catch (IOException e) {
 			logger.warning("BukkitUpdater : Error during downloading '" + remoteUrl + "'");
-			e.printStackTrace();
+			logger.warning(e.toString());
 		}
 		
 		return false;

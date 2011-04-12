@@ -63,8 +63,15 @@ public class BukkitUpdater extends JavaPlugin {
 			pm.disablePlugin(this);
 		}
 		updater = new BUpdater(this);
-		
-		updater.update();
+
+                getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+
+                    @Override
+                    public void run() {
+                        updater.update();
+                    }
+                });
+
 		
 		logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " is enabled!");
 	}
