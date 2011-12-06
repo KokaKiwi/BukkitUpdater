@@ -1,0 +1,9 @@
+name: BukkitUpdater
+version: ${project.version}
+main: com.kokakiwi.bukkit.plugins.bukkitupdater.BukkitUpdater
+depend: [WorldEdit]
+author: KokaKiwi
+commands:
+  updater:
+    description: Main command of BukkitUpdater.
+    usage: /<command> help
