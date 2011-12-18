@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
+
+import com.google.common.collect.Lists;
 import com.kokakiwi.bukkit.plugins.bukkitupdater.BukkitUpdater;
 
 public class Updater
@@ -13,6 +16,8 @@ public class Updater
     private final BukkitUpdater        plugin;
     private final ConfigurationSection config;
     private File                       tempDir      = null;
+    private File                       installDir   = null;
+    private File                       pluginsDir   = null;
     
     private final List<Repository>     repositories = new ArrayList<Repository>();
     
@@ -29,11 +34,58 @@ public class Updater
     
     // Actions
     
+    public List<PluginEntry> update()
+    {
+        final List<PluginEntry> results = new ArrayList<PluginEntry>();
+        
+        return results;
+    }
+    
+    public boolean install(PluginEntry entry) throws Exception
+    {
+        return PluginInstaller.install(entry, installDir, tempDir);
+    }
+    
+    public boolean delete(PluginEntry entry)
+    {
+        return delete(entry, false);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public boolean delete(PluginEntry entry, boolean purge)
+    {
+        final Plugin test = plugin.getServer().getPluginManager()
+                .getPlugin(entry.getName());
+        if (test != null)
+        {
+            final StringBuffer sb = new StringBuffer(entry.getName());
+            if (purge)
+            {
+                sb.insert(0, '$');
+            }
+            
+            List<String> deleteList = plugin.getConfig().getStringList(
+                    "delete-queue");
+            
+            if (deleteList == null)
+            {
+                deleteList = Lists.newArrayList();
+            }
+            
+            deleteList.add(sb.toString());
+            plugin.getConfig().set("delete-queue", deleteList);
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
     public List<PluginEntry> search(Pattern pattern)
     {
-        List<PluginEntry> results = new ArrayList<PluginEntry>();
+        final List<PluginEntry> results = new ArrayList<PluginEntry>();
         
-        for (Repository repository : repositories)
+        for (final Repository repository : repositories)
         {
             results.addAll(repository.search(pattern));
         }
@@ -58,6 +110,26 @@ public class Updater
         }
     }
     
+    public File getPluginsDir()
+    {
+        return pluginsDir;
+    }
+    
+    public void setPluginsDir(File pluginsDir)
+    {
+        this.pluginsDir = pluginsDir;
+    }
+    
+    public File getInstallDir()
+    {
+        return installDir;
+    }
+    
+    public void setInstallDir(File installDir)
+    {
+        this.installDir = installDir;
+    }
+    
     public BukkitUpdater getPlugin()
     {
         return plugin;
@@ -75,7 +147,7 @@ public class Updater
     
     public void addRepository(String url)
     {
-        Repository repository = new Repository();
+        final Repository repository = new Repository();
         repository.setUrl(url);
         
         addRepository(repository);
@@ -93,12 +165,12 @@ public class Updater
     {
         try
         {
-            for (Repository repository : repositories)
+            for (final Repository repository : repositories)
             {
                 repository.load();
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             e.printStackTrace();
         }

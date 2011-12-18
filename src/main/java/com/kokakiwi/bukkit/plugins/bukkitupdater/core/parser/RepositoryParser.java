@@ -14,14 +14,14 @@ public class RepositoryParser
             throws Exception
     {
         // Load plugins
-        Element plugins = root.getChild("plugins");
+        final Element plugins = root.getChild("plugins");
         if (plugins != null)
         {
-            Iterator<Element> iterator = plugins.getChildren().iterator();
+            final Iterator<Element> iterator = plugins.getChildren().iterator();
             while (iterator.hasNext())
             {
-                Element plugin = iterator.next();
-                PluginEntry entry = new PluginEntry();
+                final Element plugin = iterator.next();
+                final PluginEntry entry = new PluginEntry();
                 PluginParser.parse(entry, plugin);
                 repository.addPlugin(entry);
             }

@@ -19,7 +19,8 @@ public class PermissionsExBridge implements PermissionsBridge
     
     public boolean check(Server server)
     {
-        Plugin test = server.getPluginManager().getPlugin("PermissionsEx");
+        final Plugin test = server.getPluginManager()
+                .getPlugin("PermissionsEx");
         
         if (test != null)
         {
@@ -34,7 +35,7 @@ public class PermissionsExBridge implements PermissionsBridge
     {
         return 30;
     }
-
+    
     public String getName()
     {
         return "PermissionsEx v" + plugin.getDescription().getVersion();

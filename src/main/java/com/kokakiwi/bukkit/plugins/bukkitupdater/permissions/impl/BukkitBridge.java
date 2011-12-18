@@ -21,7 +21,7 @@ public class BukkitBridge implements PermissionsBridge
     {
         return 1000;
     }
-
+    
     public String getName()
     {
         return "Bukkit Perms";

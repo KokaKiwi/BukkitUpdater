@@ -40,12 +40,12 @@ public class PluginParser
     @SuppressWarnings("unchecked")
     public static void parse(PluginEntry entry, Element root) throws Exception
     {
-        String remoteEntryUrl = root.getAttributeValue("remote");
+        final String remoteEntryUrl = root.getAttributeValue("remote");
         if (remoteEntryUrl != null)
         {
             entry.setRemoteEntryUrl(remoteEntryUrl);
             
-            URL url = new URL(remoteEntryUrl);
+            final URL url = new URL(remoteEntryUrl);
             parseRemoteEntry(entry, url);
         }
         else
@@ -57,22 +57,22 @@ public class PluginParser
             entry.setDescription(root.getChildText("description"));
             entry.setFileUrl(root.getChildText("file-url"));
             
-            String minBukkitBuild = root.getChildText("min-bukkit-build");
-            if(minBukkitBuild != null)
+            final String minBukkitBuild = root.getChildText("min-bukkit-build");
+            if (minBukkitBuild != null)
             {
                 entry.setMinBukkitBuild(Integer.parseInt(minBukkitBuild));
             }
             
-            List<PluginEntry.Dependency> dependencies = new ArrayList<PluginEntry.Dependency>();
-            Element dependenciesNode = root.getChild("dependencies");
+            final List<PluginEntry.Dependency> dependencies = new ArrayList<PluginEntry.Dependency>();
+            final Element dependenciesNode = root.getChild("dependencies");
             if (dependenciesNode != null)
             {
-                Iterator<Element> deps = dependenciesNode.getChildren()
+                final Iterator<Element> deps = dependenciesNode.getChildren()
                         .iterator();
                 while (deps.hasNext())
                 {
-                    Element dep = deps.next();
-                    Dependency dependency = DependencyParser.parse(dep);
+                    final Element dep = deps.next();
+                    final Dependency dependency = DependencyParser.parse(dep);
                     dependencies.add(dependency);
                 }
             }
@@ -83,11 +83,26 @@ public class PluginParser
     public static void parseRemoteEntry(PluginEntry entry, URL url)
             throws Exception
     {
-        InputStream in = url.openStream();
-        SAXBuilder builder = new SAXBuilder();
-        Document document = builder.build(in);
+        parseRemoteEntry(entry, url, "xml");
+    }
+    
+    public static void parseRemoteEntry(PluginEntry entry, URL url, String type)
+            throws Exception
+    {
+        if (type.equalsIgnoreCase("xml"))
+        {
+            parseRemoteEntryXml(entry, url);
+        }
+    }
+    
+    public static void parseRemoteEntryXml(PluginEntry entry, URL url)
+            throws Exception
+    {
+        final InputStream in = url.openStream();
+        final SAXBuilder builder = new SAXBuilder();
+        final Document document = builder.build(in);
         
-        Element root = document.getRootElement();
+        final Element root = document.getRootElement();
         parse(entry, root);
     }
 }

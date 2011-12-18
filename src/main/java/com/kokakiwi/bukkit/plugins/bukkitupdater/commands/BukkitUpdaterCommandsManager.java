@@ -18,7 +18,7 @@ public class BukkitUpdaterCommandsManager extends
     public BukkitUpdaterCommandsManager(BukkitUpdater plugin)
     {
         this.plugin = plugin;
-        this.injector = new MyInjector(plugin);
+        injector = new MyInjector(plugin);
     }
     
     @Override
@@ -28,7 +28,7 @@ public class BukkitUpdaterCommandsManager extends
         
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             has = plugin.getPermissions().getBridge().has(player, perm);
         }
         
@@ -54,11 +54,11 @@ public class BukkitUpdaterCommandsManager extends
             {
                 constructor = cls.getConstructor(BukkitUpdater.class);
             }
-            catch (NoSuchMethodException e)
+            catch (final NoSuchMethodException e)
             {
                 e.printStackTrace();
             }
-            catch (SecurityException e)
+            catch (final SecurityException e)
             {
                 e.printStackTrace();
             }

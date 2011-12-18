@@ -9,10 +9,11 @@ public class DependencyParser
 {
     public static Dependency parse(Element root)
     {
-        Dependency dependency = new Dependency();
+        final Dependency dependency = new Dependency();
         
         dependency.setId(root.getAttributeValue("id"));
-        dependency.setMinimumVersion(Version.parseString(root.getAttributeValue("min-version")));
+        dependency.setMinimumVersion(Version.parseString(root
+                .getAttributeValue("min-version")));
         
         return dependency;
     }

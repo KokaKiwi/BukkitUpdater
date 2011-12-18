@@ -46,20 +46,21 @@ public class PermissionsManager
     public <T extends PermissionsBridge> void register(Class<T> clazz)
             throws Exception
     {
-        Constructor<T> constructor = clazz.getConstructor();
-        T tmp = constructor.newInstance();
+        final Constructor<T> constructor = clazz.getConstructor();
+        final T tmp = constructor.newInstance();
         
         register(tmp);
     }
     
     public void reload()
     {
-        for (PermissionsBridge b : bridges)
+        for (final PermissionsBridge b : bridges)
         {
             if (b.check(server))
             {
                 bridge = b;
-                BukkitUpdater.LOGGER.info("Permissions Bridge '" + b.getName() + "' binded.");
+                BukkitUpdater.LOGGER.info("Permissions Bridge '" + b.getName()
+                        + "' binded.");
                 break;
             }
         }
@@ -79,7 +80,7 @@ public class PermissionsManager
         
         public int compare(PermissionsBridge i, PermissionsBridge j)
         {
-            return (i.getPriority() - j.getPriority());
+            return i.getPriority() - j.getPriority();
         }
         
     }

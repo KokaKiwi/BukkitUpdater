@@ -19,7 +19,7 @@ public class GroupManagerBridge implements PermissionsBridge
     
     public boolean check(Server server)
     {
-        Plugin test = server.getPluginManager().getPlugin("");
+        final Plugin test = server.getPluginManager().getPlugin("");
         
         if (test != null)
         {
@@ -34,7 +34,7 @@ public class GroupManagerBridge implements PermissionsBridge
     {
         return 50;
     }
-
+    
     public String getName()
     {
         return "GroupManager v" + plugin.getDescription().getVersion();

@@ -22,11 +22,11 @@ public class Repository
     
     public void load() throws Exception
     {
-        URL repoURL = new URL(url);
-        InputStream in = repoURL.openStream();
+        final URL repoURL = new URL(url);
+        final InputStream in = repoURL.openStream();
         
-        SAXBuilder builder = new SAXBuilder();
-        Document document = builder.build(in);
+        final SAXBuilder builder = new SAXBuilder();
+        final Document document = builder.build(in);
         
         RepositoryParser.parse(this, document.getRootElement());
     }
@@ -35,9 +35,9 @@ public class Repository
     
     public List<PluginEntry> search(Pattern pattern)
     {
-        List<PluginEntry> results = new ArrayList<PluginEntry>();
+        final List<PluginEntry> results = new ArrayList<PluginEntry>();
         
-        for (PluginEntry entry : plugins)
+        for (final PluginEntry entry : plugins)
         {
             if (pattern.matcher(entry.getName()).find()
                     || pattern.matcher(entry.getId()).find())
@@ -46,7 +46,7 @@ public class Repository
             }
         }
         
-        for (Repository repository : inherited)
+        for (final Repository repository : inherited)
         {
             results.addAll(repository.search(pattern));
         }
@@ -88,19 +88,29 @@ public class Repository
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj == null)
+        {
             return false;
+        }
         if (getClass() != obj.getClass())
+        {
             return false;
-        Repository other = (Repository) obj;
+        }
+        final Repository other = (Repository) obj;
         if (url == null)
         {
             if (other.url != null)
+            {
                 return false;
+            }
         }
         else if (!url.equals(other.url))
+        {
             return false;
+        }
         return true;
     }
 }

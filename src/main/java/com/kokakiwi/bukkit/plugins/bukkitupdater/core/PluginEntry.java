@@ -2,38 +2,29 @@ package com.kokakiwi.bukkit.plugins.bukkitupdater.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.bukkit.ChatColor;
+
+import com.google.common.collect.Maps;
 import com.kokakiwi.bukkit.plugins.bukkitupdater.utils.Version;
 
 public class PluginEntry
 {
-    private String            id               = null;
-    private String            name             = null;
-    private Version           version          = null;
-    private String            author           = null;
-    private String            description      = null;
-    private String            fileUrl          = null;
-    private String            remoteEntryUrl   = null;
-    private List<Dependency>  dependencies     = null;
-    private int               minBukkitBuild   = 0;
+    private String           id             = null;
+    private String           name           = null;
+    private Version          version        = null;
+    private String           author         = null;
+    private String           description    = null;
+    private String           fileUrl        = null;
+    private String           remoteEntryUrl = null;
+    private List<Dependency> dependencies   = null;
+    private int              minBukkitBuild = 0;
     
     public PluginEntry()
     {
         
-    }
-    
-    public PluginEntry(String id, String name, Version version, String author,
-            String description, String fileUrl, String remoteEntryUrl,
-            List<Dependency> dependencies, int minBukkitBuild)
-    {
-        this.id = id;
-        this.name = name;
-        this.version = version;
-        this.author = author;
-        this.description = description;
-        this.fileUrl = fileUrl;
-        this.remoteEntryUrl = remoteEntryUrl;
-        this.dependencies = dependencies;
-        this.minBukkitBuild = minBukkitBuild;
     }
     
     public String getId()
@@ -131,30 +122,82 @@ public class PluginEntry
         this.minBukkitBuild = minBukkitBuild;
     }
     
+    public String smartPresentation()
+    {
+        final StringBuffer buf = new StringBuffer();
+        buf.append(name);
+        buf.append(" v");
+        buf.append(version);
+        buf.append(" by ");
+        buf.append(author);
+        buf.append(" [");
+        buf.append(id);
+        buf.append(']');
+        
+        return buf.toString();
+    }
+    
+    public List<String> completePresentation()
+    {
+        return completePresentation(0);
+    }
+    
+    public List<String> completePresentation(int indent)
+    {
+        final Map<String, Object> map = Maps.newLinkedHashMap();
+        
+        map.put("ID", id);
+        map.put("Name", name);
+        map.put("Version", version);
+        map.put("Author", author);
+        if (description.length() > 0)
+        {
+            map.put("Description", description);
+        }
+        if (minBukkitBuild > 0)
+        {
+            map.put("Min Bukkit Build:", "#" + String.valueOf(minBukkitBuild));
+        }
+        
+        final List<String> pres = Presentation.present(map, indent);
+        
+        return pres;
+    }
+    
     @Override
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj == null)
+        {
             return false;
+        }
         if (getClass() != obj.getClass())
+        {
             return false;
-        PluginEntry other = (PluginEntry) obj;
+        }
+        final PluginEntry other = (PluginEntry) obj;
         if (id == null)
         {
             if (other.id != null)
+            {
                 return false;
+            }
         }
         else if (!id.equals(other.id))
+        {
             return false;
+        }
         return true;
     }
     
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("PluginEntry [id=");
         builder.append(id);
         builder.append(", name=");
@@ -176,7 +219,7 @@ public class PluginEntry
         builder.append("]");
         return builder.toString();
     }
-
+    
     public static class Dependency
     {
         private String  id;
@@ -216,13 +259,74 @@ public class PluginEntry
         @Override
         public String toString()
         {
-            StringBuilder builder = new StringBuilder();
-            builder.append("Dependency [id=");
+            final StringBuilder builder = new StringBuilder();
+            
             builder.append(id);
-            builder.append(", minimumVersion=");
+            builder.append(" (");
             builder.append(minimumVersion);
-            builder.append("]");
+            builder.append(']');
+            
             return builder.toString();
+        }
+    }
+    
+    public static class Presentation
+    {
+        public static List<String> present(Map<String, Object> map)
+        {
+            return present(map, 0);
+        }
+        
+        @SuppressWarnings("unchecked")
+        public static List<String> present(Map<String, Object> map, int indent)
+        {
+            final List<String> list = new ArrayList<String>();
+            
+            for (final Entry<String, Object> entry : map.entrySet())
+            {
+                final StringBuffer sb = new StringBuffer();
+                
+                for (int i = 0; i < indent; i++)
+                {
+                    sb.append(' ');
+                }
+                
+                sb.append(ChatColor.GREEN);
+                sb.append(entry.getKey());
+                sb.append(": ");
+                sb.append(ChatColor.AQUA);
+                
+                if (entry.getValue() instanceof List)
+                {
+                    list.add(sb.toString());
+                    final List<Object> sub = (List<Object>) entry.getValue();
+                    for (final Object o : sub)
+                    {
+                        final StringBuffer subb = new StringBuffer();
+                        for (int i = 0; i <= indent; i++)
+                        {
+                            subb.append(' ');
+                        }
+                        subb.append(ChatColor.AQUA);
+                        subb.append("- ");
+                        subb.append(o.toString());
+                        list.add(subb.toString());
+                    }
+                }
+                else if (entry.getValue() instanceof Map)
+                {
+                    list.add(sb.toString());
+                    list.addAll(present((Map<String, Object>) entry.getValue(),
+                            indent + 1));
+                }
+                else
+                {
+                    sb.append(entry.getValue().toString());
+                    list.add(sb.toString());
+                }
+            }
+            
+            return list;
         }
     }
 }

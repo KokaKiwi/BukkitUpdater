@@ -25,20 +25,20 @@ public class Libraries
     
     public static void loadLibraries(boolean overwrite)
     {
-        File dest = new File("lib/");
+        final File dest = new File("lib/");
         if (!dest.exists())
         {
             dest.mkdirs();
         }
         
-        List<URL> libUrls = new ArrayList<URL>();
+        final List<URL> libUrls = new ArrayList<URL>();
         
-        for (String lib : libraries)
+        for (final String lib : libraries)
         {
             try
             {
-                URL url = new URL(lib);
-                File libFile = new File(dest, url.getFile().substring(
+                final URL url = new URL(lib);
+                final File libFile = new File(dest, url.getFile().substring(
                         url.getFile().lastIndexOf('/') + 1));
                 if (!libFile.exists() || overwrite)
                 {
@@ -46,11 +46,11 @@ public class Libraries
                     libUrls.add(libFile.toURI().toURL());
                 }
             }
-            catch (MalformedURLException e)
+            catch (final MalformedURLException e)
             {
                 e.printStackTrace();
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 e.printStackTrace();
             }
@@ -58,9 +58,9 @@ public class Libraries
         
         if (libUrls.size() > 0)
         {
-            URL[] urls = libUrls.toArray(new URL[] {});
+            final URL[] urls = libUrls.toArray(new URL[] {});
             @SuppressWarnings("unused")
-            URLClassLoader classLoader = new URLClassLoader(urls,
+            final URLClassLoader classLoader = new URLClassLoader(urls,
                     BukkitUpdater.class.getClassLoader());
         }
     }
@@ -75,11 +75,11 @@ public class Libraries
         BukkitUpdater.LOGGER
                 .info(" - Downloading '" + dest.getName() + "' ...");
         
-        URLConnection connection = url.openConnection();
-        OutputStream out = new FileOutputStream(dest);
-        InputStream in = connection.getInputStream();
+        final URLConnection connection = url.openConnection();
+        final OutputStream out = new FileOutputStream(dest);
+        final InputStream in = connection.getInputStream();
         
-        byte[] bytes = new byte[1024];
+        final byte[] bytes = new byte[1024];
         int size = 0;
         int readed;
         while ((readed = in.read(bytes)) > 0)
@@ -91,7 +91,7 @@ public class Libraries
         in.close();
         out.close();
         
-        double size_ko = size / 1024;
+        final double size_ko = size / 1024;
         
         BukkitUpdater.LOGGER.info(" - Downloaded  '" + dest.getName() + "' - "
                 + size_ko + " Ko.");
